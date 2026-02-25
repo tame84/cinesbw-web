@@ -101,7 +101,7 @@ export const getShows = query(
 				and(eq(showtimesTable.showUuid, showsTable.uuid), ...showtimesFilters)
 			)
 			.innerJoin(cinemasTable, eq(cinemasTable.id, showtimesTable.cinemaId))
-			.orderBy(moviesTable.slug, showtimesTable.dateTime);
+			.orderBy(moviesTable.slug, showtimesTable.dateTime, genresTable.name);
 
 		const showsMap = new Map<string, Show>();
 		const showtimesSet = new Set<string>();
