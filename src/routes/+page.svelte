@@ -66,8 +66,9 @@
 		{#snippet pending()}
 			<p>Chargement de la programmation...</p>
 		{/snippet}
-
-		{#if shows.length === 0}
+		{#if showsPromise.loading}
+			<p>Chargement de la programmation...</p>
+		{:else if shows.length === 0}
 			<p>Aucun résultat n'a été trouvé.</p>
 		{:else}
 			<div class="shows">
