@@ -5,7 +5,6 @@
 	import { getShows } from '$lib/remotes/shows.remote';
 	import { runtimeMinuteToHours } from '$lib/utils/movie';
 	import type { ShowCinemas } from '$lib/utils/types';
-	import { title } from 'valibot';
 
 	let showsDate = $derived.by(() => {
 		const date = page.url.searchParams.get('date');
