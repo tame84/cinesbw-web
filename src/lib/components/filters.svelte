@@ -236,8 +236,10 @@
 		}
 	}
 	#filters-dialog {
+		max-height: 100svh;
 		height: fit-content;
 		width: 100%;
+		overflow-y: scroll;
 		padding: 1rem;
 		background: $bg-light;
 		border-radius: $radius-sm $radius-sm 0 0;
