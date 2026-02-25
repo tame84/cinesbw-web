@@ -1,0 +1,44 @@
+@use './vars.scss' as *;
+@import './reset.css';
+
+body {
+	font: $font-body;
+	color: $fg;
+	background: $bg;
+}
+
+a,
+label {
+	display: inline-block;
+}
+
+button {
+	cursor: pointer;
+}
+
+.btn {
+	padding: 0.75rem 1.5rem;
+	text-align: center;
+	border-radius: $radius-sm;
+
+	&--primary {
+		background: $color-primary;
+		color: $fg-reverse;
+		transition: 0.1s ease-in;
+	}
+	&--secondary {
+		background: $color-secondary;
+		color: $fg-reverse;
+		transition: 0.1s ease-in;
+	}
+}
+
+h1,
+h2,
+h3 {
+	font: $font-heading;
+}
+
+h3 {
+	font-size: 0.875rem;
+}

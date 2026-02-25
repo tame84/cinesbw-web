@@ -1,0 +1,38 @@
+@font-face {
+	font-family: 'Ubuntu';
+	src: url(./fonts/Ubuntu-Regular.ttf);
+	font-weight: 400;
+}
+
+@font-face {
+	font-family: 'Ubuntu';
+	src: url(./fonts/Ubuntu-Medium.ttf);
+
+	font-weight: 500;
+}
+
+$font-body:
+	400 1rem 'Ubuntu',
+	sans-serif;
+$font-heading:
+	500 1.2rem 'Ubuntu',
+	sans-serif;
+
+$bg: #15172b;
+$bg-light: #2f3252;
+$bg-lighter: #3f436d;
+
+$border: 1px solid #ffffff1a;
+
+$fg: #fafafa;
+$fg-reverse: #0a0a0a;
+$fg-muted: #a9abc2;
+
+$color-primary: #e8b529;
+$color-primary-darker: #d4a625;
+$color-secondary: #d1d2df;
+$color-secondary-darker: #b9bac7;
+
+$radius-sm: 0.25rem;
+
+$spacing-sm: 0.25rem;
