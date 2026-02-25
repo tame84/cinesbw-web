@@ -6,48 +6,29 @@
 	import { runtimeMinuteToHours } from '$lib/utils/movie';
 	import type { ShowCinemas } from '$lib/utils/types';
 
-	let showsDate = $derived.by(() => {
-		const date = page.url.searchParams.get('date');
-		if (date) {
-			return new Date(date);
-		} else {
-			return new Date();
-		}
-	});
-	let showsCinemas = $derived.by(() => {
-		const cinemas = page.url.searchParams.get('cinemas');
-		if (cinemas) {
-			return cinemas.split(',').map(Number) as ShowCinemas[];
-		} else {
-			return [];
-		}
-	});
-	let showsVersions = $derived.by(() => {
-		const versions = page.url.searchParams.get('versions');
-		if (versions) {
-			return versions.split(',');
-		} else {
-			return [];
-		}
-	});
-	let showsGenres = $derived.by(() => {
-		const genres = page.url.searchParams.get('genres');
-		if (genres) {
-			return genres.split(',').map(Number);
-		} else {
-			return [];
-		}
+	let showsFilters = $derived.by(() => {
+		const searchParams = page.url.searchParams;
+		const date = searchParams.get('date');
+		const cinemas = searchParams.get('cinemas');
+		const versions = searchParams.get('versions');
+		const genres = searchParams.get('genres');
+
+		return {
+			date: date ? new Date(date) : new Date(),
+			cinemas: cinemas ? (cinemas.split(',').map(Number) as ShowCinemas[]) : [],
+			versions: versions ? versions.split(',') : [],
+			genres: genres ? genres.split(',').map(Number) : []
+		};
 	});
 
-	let showsPromise = $derived(
-		getShows({
-			date: showsDate,
-			cinemas: showsCinemas,
-			versions: showsVersions,
-			genres: showsGenres
+	let shows = $derived(
+		await getShows({
+			date: showsFilters.date,
+			cinemas: showsFilters.cinemas,
+			versions: showsFilters.versions,
+			genres: showsFilters.genres
 		})
 	);
-	let shows = $derived(await showsPromise);
 </script>
 
 <svelte:head>
@@ -65,9 +46,7 @@
 		{#snippet pending()}
 			<p>Chargement de la programmation...</p>
 		{/snippet}
-		{#if showsPromise.loading}
-			<p>Chargement de la programmation...</p>
-		{:else if shows.length === 0}
+		{#if shows.length === 0}
 			<p>Aucun résultat n'a été trouvé.</p>
 		{:else}
 			<div class="shows">

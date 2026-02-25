@@ -20,37 +20,19 @@
 
 	let { showGenres, datesToShow, resultCount }: Props = $props();
 
-	let showsDate = $derived.by(() => {
-		const date = page.url.searchParams.get('date');
-		if (date) {
-			return new Date(date);
-		} else {
-			return new Date();
-		}
-	});
-	let showsCinemas = $derived.by(() => {
-		const cinemas = page.url.searchParams.get('cinemas');
-		if (cinemas) {
-			return cinemas.split(',').map(Number) as ShowCinemas[];
-		} else {
-			return [];
-		}
-	});
-	let showsVersions = $derived.by(() => {
-		const versions = page.url.searchParams.get('versions');
-		if (versions) {
-			return versions.split(',');
-		} else {
-			return [];
-		}
-	});
-	let showsGenres = $derived.by(() => {
-		const genres = page.url.searchParams.get('genres');
-		if (genres) {
-			return genres.split(',').map(Number);
-		} else {
-			return [];
-		}
+	let showsFilters = $derived.by(() => {
+		const searchParams = page.url.searchParams;
+		const date = searchParams.get('date');
+		const cinemas = searchParams.get('cinemas');
+		const versions = searchParams.get('versions');
+		const genres = searchParams.get('genres');
+
+		return {
+			date: date ? new Date(date) : new Date(),
+			cinemas: cinemas ? (cinemas.split(',').map(Number) as ShowCinemas[]) : [],
+			versions: versions ? versions.split(',') : [],
+			genres: genres ? genres.split(',').map(Number) : []
+		};
 	});
 
 	const toggleFilter = (filter: 'cinemas' | 'versions' | 'genres', value: string | number) => {
@@ -92,7 +74,8 @@
 				<input
 					type="radio"
 					name="date"
-					checked={date.toISOString().split('T')[0] === showsDate.toISOString().split('T')[0]}
+					checked={date.toISOString().split('T')[0] ===
+						showsFilters.date.toISOString().split('T')[0]}
 					onclick={() => {
 						const params = new URLSearchParams(page.url.searchParams);
 						params.set('date', date.toISOString().split('T')[0]);
@@ -127,7 +110,7 @@
 						<Checkbox
 							text={name}
 							name="cinema"
-							checked={showsCinemas.includes(id)}
+							checked={showsFilters.cinemas.includes(id)}
 							onclick={() => toggleFilter('cinemas', id)}
 						/>
 					{/each}
@@ -140,7 +123,7 @@
 						<Checkbox
 							text={version}
 							name="version"
-							checked={showsVersions.includes(version)}
+							checked={showsFilters.versions.includes(version)}
 							onclick={() => toggleFilter('versions', version)}
 						/>
 					{/each}
@@ -154,7 +137,7 @@
 							<Checkbox
 								text={name}
 								name="genre"
-								checked={showsGenres.includes(id)}
+								checked={showsFilters.genres.includes(id)}
 								onclick={() => toggleFilter('genres', id)}
 							/>
 						{/each}
@@ -172,7 +155,7 @@
 				class="btn btn--secondary"
 				type="button"
 				onclick={() => {
-					const currentDate = showsDate.toISOString().split('T')[0];
+					const currentDate = showsFilters.date.toISOString().split('T')[0];
 					goto(`?date=${currentDate}`, { noScroll: true });
 				}}>Effacer les filtres</button
 			>

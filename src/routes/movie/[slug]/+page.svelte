@@ -17,43 +17,28 @@
 
 	let { params } = $props();
 
-	let showsDate = $derived.by(() => {
-		const date = page.url.searchParams.get('date');
-		if (date) {
-			return new Date(date);
-		} else {
-			return new Date();
-		}
-	});
-	let showsCinemas = $derived.by(() => {
-		const cinemas = page.url.searchParams.get('cinemas');
-		if (cinemas) {
-			return cinemas.split(',').map(Number) as ShowCinemas[];
-		} else {
-			return [];
-		}
-	});
-	let showsVersions = $derived.by(() => {
-		const versions = page.url.searchParams.get('versions');
-		if (versions) {
-			return versions.split(',');
-		} else {
-			return [];
-		}
+	let showsFilters = $derived.by(() => {
+		const searchParams = page.url.searchParams;
+		const date = searchParams.get('date');
+		const cinemas = searchParams.get('cinemas');
+		const versions = searchParams.get('versions');
+
+		return {
+			date: date ? new Date(date) : new Date(),
+			cinemas: cinemas ? (cinemas.split(',').map(Number) as ShowCinemas[]) : [],
+			versions: versions ? versions.split(',') : []
+		};
 	});
 
-	let moviePromise = $derived(getMovie(params.slug));
-	let movie = $derived(await moviePromise);
-
-	let showtimesPromise = $derived(
-		getMovieShowtimes({
+	let movie = $derived(await getMovie(params.slug));
+	let showtimes = $derived(
+		await getMovieShowtimes({
 			uuid: movie.uuid,
-			date: showsDate,
-			cinemas: showsCinemas,
-			versions: showsVersions
+			date: showsFilters.date,
+			cinemas: showsFilters.cinemas,
+			versions: showsFilters.versions
 		})
 	);
-	let showtimes = $derived(await showtimesPromise);
 
 	let trailerIFrame = $state<HTMLIFrameElement>();
 
