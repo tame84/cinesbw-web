@@ -236,7 +236,7 @@
 		}
 	}
 	#filters-dialog {
-		max-height: 100svh;
+		max-height: 100vh;
 		height: fit-content;
 		width: 100%;
 		overflow-y: scroll;
