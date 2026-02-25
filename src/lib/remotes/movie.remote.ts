@@ -43,7 +43,8 @@ export const getMovie = query(v.string(), async (slug) => {
 		.select({ name: genresTable.name })
 		.from(moviesGenresTable)
 		.where(eq(moviesGenresTable.movieUuid, movie.uuid))
-		.leftJoin(genresTable, eq(genresTable.id, moviesGenresTable.genreId));
+		.leftJoin(genresTable, eq(genresTable.id, moviesGenresTable.genreId))
+		.orderBy(genresTable.name);
 	const genres = rawGenres.map((genre) => genre.name);
 
 	return { ...movie, genres };
