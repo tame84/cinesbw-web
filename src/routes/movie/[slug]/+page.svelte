@@ -41,9 +41,8 @@
 		})
 	);
 
-	let trailerIFrame = $state<HTMLIFrameElement>();
-
 	const stopTrailerOnClose = () => {
+		const trailerIFrame: HTMLIFrameElement | null = document.querySelector('#trailer-modal iframe');
 		if (!trailerIFrame) return;
 		trailerIFrame.src = trailerIFrame.src;
 	};
@@ -72,7 +71,6 @@
 		<div class="content">
 			<div class="video-wrap">
 				<iframe
-					bind:this={trailerIFrame}
 					src="https://www.youtube.com/embed/{movie.videos[0].key}"
 					title={movie.videos[0].name}
 					frameborder="0"
