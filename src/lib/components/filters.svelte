@@ -14,27 +14,18 @@
 	import dayjs from 'dayjs';
 
 	interface Props {
+        showsFilters: {
+            date: dayjs.Dayjs
+            cinemas: ShowCinemas[]
+            versions: string[]
+            genres: number[]
+        }
 		showGenres: boolean;
 		datesToShow?: string[];
 		resultCount?: number;
 	}
 
-	let { showGenres, datesToShow, resultCount }: Props = $props();
-
-	let showsFilters = $derived.by(() => {
-		const searchParams = page.url.searchParams;
-		const date = searchParams.get('date');
-		const cinemas = searchParams.get('cinemas');
-		const versions = searchParams.get('versions');
-		const genres = searchParams.get('genres');
-
-		return {
-			date: date ? dayjs(date) : dayjs().startOf('date'),
-			cinemas: cinemas ? (cinemas.split(',').map(Number) as ShowCinemas[]) : [],
-			versions: versions ? versions.split(',') : [],
-			genres: genres ? genres.split(',').map(Number) : []
-		};
-	});
+	let { showsFilters, showGenres, datesToShow, resultCount }: Props = $props();
 
 	const toggleFilter = (filter: 'cinemas' | 'versions' | 'genres', value: string | number) => {
 		const currentValue = page.url.searchParams.get(filter);
@@ -150,7 +141,7 @@
 				class="btn btn--secondary"
 				type="button"
 				onclick={() => {
-					const currentDate = showsFilters.date.toISOString().split('T')[0];
+					const currentDate = showsFilters.date.format("YYYY-MM-DD");
 					goto(`?date=${currentDate}`, { noScroll: true });
 				}}>Effacer les filtres</button
 			>

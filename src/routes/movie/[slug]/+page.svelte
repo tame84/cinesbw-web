@@ -16,20 +16,9 @@
 	import X from '@lucide/svelte/icons/x';
 	import dayjs from 'dayjs';
 
-	let { params } = $props();
+	let { data, params } = $props();
 
-	let showsFilters = $derived.by(() => {
-		const searchParams = page.url.searchParams;
-		const date = searchParams.get('date');
-		const cinemas = searchParams.get('cinemas');
-		const versions = searchParams.get('versions');
-
-		return {
-			date: date ? dayjs(date) : dayjs().startOf('date'),
-			cinemas: cinemas ? (cinemas.split(',').map(Number) as ShowCinemas[]) : [],
-			versions: versions ? versions.split(',') : []
-		};
-	});
+	let showsFilters = $derived(data.showsFilters);
 
 	let movie = $derived(await getMovie(params.slug));
 	let showtimes = $derived(
@@ -145,6 +134,7 @@
 </main>
 
 <Filters
+{showsFilters}
 	showGenres={false}
 	datesToShow={await getMovieAllShowsDates(movie.uuid)}
 	resultCount={showtimes.length}

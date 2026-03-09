@@ -7,20 +7,9 @@
 	import type { ShowCinemas } from '$lib/utils/types';
 	import dayjs from 'dayjs';
 
-	let showsFilters = $derived.by(() => {
-		const searchParams = page.url.searchParams;
-		const date = searchParams.get('date');
-		const cinemas = searchParams.get('cinemas');
-		const versions = searchParams.get('versions');
-		const genres = searchParams.get('genres');
+    const {data} = $props()
 
-		return {
-			date: date ? dayjs(date) : dayjs().startOf('date'),
-			cinemas: cinemas ? (cinemas.split(',').map(Number) as ShowCinemas[]) : [],
-			versions: versions ? versions.split(',') : [],
-			genres: genres ? genres.split(',').map(Number) : []
-		};
-	});
+	let showsFilters = $derived(data.showsFilters);
 
 	let shows = $derived(
 		await getShows({
@@ -40,7 +29,7 @@
 	<h1 class="logo">CinésBW</h1>
 </header>
 
-<Filters showGenres={true} resultCount={shows.length} />
+<Filters {showsFilters} showGenres={true} resultCount={shows.length} />
 
 <main>
 	<svelte:boundary>
