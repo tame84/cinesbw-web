@@ -15,7 +15,7 @@
 
 <li>
 	<a href={cinema.website} target="_blank">
-		<strong>{dayjs(datetime).format('HH:mm')}<span>{version}</span></strong>
+		<strong>{dayjs.tz(datetime).format('HH:mm')}<span>{version}</span></strong>
 
 		<p>{cinema.name}</p></a
 	>

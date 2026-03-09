@@ -10,7 +10,7 @@ export const load = ({ url }) => {
 
 	return {
 		showsFilters: {
-			date: date ? dayjs(date) : dayjs().startOf('date'),
+			date: date ? dayjs.tz(date) : dayjs.tz().startOf('date'),
 			cinemas: cinemas ? (cinemas.split(',').map(Number) as ShowCinemas[]) : [],
 			versions: versions ? versions.split(',') : [],
 			genres: genres ? genres.split(',').map(Number) : []

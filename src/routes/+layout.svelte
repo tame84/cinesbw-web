@@ -15,7 +15,7 @@
 
 	let { children } = $props();
 
-	let lastScrapeDate = $derived(dayjs(await getLastScrapeDate()));
+	let lastScrapeDate = $derived(dayjs.tz(await getLastScrapeDate()));
 </script>
 
 <svelte:head>

@@ -55,7 +55,7 @@
 	>
 	<div class="dates">
 		{#each (await getShowsDates()).filter((date) => !datesToShow || datesToShow.includes(date)) as dateStr}
-			{@const date = dayjs(dateStr)}
+			{@const date = dayjs.tz(dateStr)}
 
 			<label>
 				<input
@@ -68,9 +68,9 @@
 						goto(`?${params.toString()}`, { noScroll: true });
 					}}
 				/>
-				{#if date.isSame(dayjs().startOf('date'))}
+				{#if date.isSame(dayjs.tz().startOf('date'))}
 					<span>Aujourd'hui</span>
-				{:else if date.isSame(dayjs().startOf('date').add(1, 'day'))}
+				{:else if date.isSame(dayjs.tz().startOf('date').add(1, 'day'))}
 					<span>Demain</span>
 				{:else}
 					<p>

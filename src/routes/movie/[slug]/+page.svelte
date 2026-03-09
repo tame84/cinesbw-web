@@ -25,7 +25,7 @@
 <svelte:head>
 	<title
 		>{movie.title}
-		{movie.releaseDate && `(${dayjs(movie.releaseDate).year()})`} • Film et séances • CinésBW</title
+		{movie.releaseDate && `(${dayjs.tz(movie.releaseDate).year()})`} • Film et séances • CinésBW</title
 	>
 </svelte:head>
 
@@ -69,7 +69,7 @@
 	<div class="metadata">
 		{#if movie.releaseDate}
 			<p>
-				Sortie le <strong>{dayjs(movie.releaseDate).format('D MMMM YYYY')}</strong>
+				Sortie le <strong>{dayjs.tz(movie.releaseDate).format('D MMMM YYYY')}</strong>
 			</p>
 		{/if}
 		{#if movie.originalLanguage}

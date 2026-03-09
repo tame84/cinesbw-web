@@ -68,8 +68,8 @@ export const getMovieShowtimes = query(
 		uuid: v.string(),
 		date: v.pipe(
 			v.date(),
-			v.toMinValue(dayjs().startOf('date').toDate()),
-			v.transform((date) => dayjs(date))
+			v.toMinValue(dayjs.tz().startOf('date').toDate()),
+			v.transform((date) => dayjs.tz(date))
 		),
 		cinemas: v.array(v.enum(ShowCinemas)),
 		versions: v.array(v.string())

@@ -8,7 +8,7 @@ export const getShowsDates = query(async () => {
 	const rawShowsDates = await db
 		.selectDistinct({ date: showsTable.date })
 		.from(showsTable)
-		.where(gte(showsTable.date, dayjs().startOf('date').format()))
+		.where(gte(showsTable.date, dayjs.tz().startOf('date').format()))
 		.orderBy(showsTable.date);
 	const showsDates = rawShowsDates.map(({ date }) => date);
 

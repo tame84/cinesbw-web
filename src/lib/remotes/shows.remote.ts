@@ -37,8 +37,8 @@ export const getShows = query(
 	v.object({
 		date: v.pipe(
 			v.date(),
-			v.toMinValue(dayjs().startOf('date').toDate()),
-			v.transform((date) => dayjs(date))
+			v.toMinValue(dayjs.tz().startOf('date').toDate()),
+			v.transform((date) => dayjs.tz(date))
 		),
 		cinemas: v.array(v.enum(ShowCinemas)),
 		versions: v.array(v.string()),
@@ -47,8 +47,6 @@ export const getShows = query(
 	async ({ date, cinemas, versions, genres }) => {
 		const existingVersions = await getExistingVersions(versions);
 		const existingGenres = await getExistingGenres(genres);
-
-		console.log(dayjs.tz('2026-09-03').format(), dayjs('2026-09-03').format());
 
 		const moviesGenresFilters = [
 			existingGenres.length > 0
