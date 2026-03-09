@@ -4,10 +4,17 @@
 	import { getLastScrapeDate } from '$lib/remotes/update.remote';
 	import X from '@lucide/svelte/icons/x';
 	import dayjs from 'dayjs';
+	import 'dayjs/locale/fr';
+	import utc from 'dayjs/plugin/utc';
+	import timezone from 'dayjs/plugin/timezone';
+
+	dayjs.extend(utc);
+	dayjs.extend(timezone);
+	dayjs.tz.setDefault('Europe/Brussels');
+	dayjs.locale('fr');
 
 	let { children } = $props();
 
-	dayjs.locale('fr');
 	let lastScrapeDate = $derived(dayjs(await getLastScrapeDate()));
 </script>
 
