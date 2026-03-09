@@ -12,7 +12,7 @@ import {
 import { getExistingVersions } from '$lib/utils/movie';
 import { ShowCinemas } from '$lib/utils/types';
 import { error } from '@sveltejs/kit';
-import dayjs from 'dayjs';
+import dayjs from '$lib/dayjs';
 import { and, eq, inArray, like, or } from 'drizzle-orm';
 import * as v from 'valibot';
 
@@ -69,7 +69,7 @@ export const getMovieShowtimes = query(
 		date: v.pipe(
 			v.date(),
 			v.toMinValue(dayjs.tz().startOf('date').toDate()),
-			v.transform((date) => dayjs.tz(date))
+			v.transform((date) => dayjs(date).tz())
 		),
 		cinemas: v.array(v.enum(ShowCinemas)),
 		versions: v.array(v.string())

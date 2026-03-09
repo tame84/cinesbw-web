@@ -8,7 +8,7 @@
 	import ChevronRight from '@lucide/svelte/icons/chevron-right';
 	import Play from '@lucide/svelte/icons/play';
 	import X from '@lucide/svelte/icons/x';
-	import dayjs from 'dayjs';
+	import dayjs from '$lib/dayjs';
 
 	let { data } = $props();
 
@@ -25,7 +25,7 @@
 <svelte:head>
 	<title
 		>{movie.title}
-		{movie.releaseDate && `(${dayjs.tz(movie.releaseDate).year()})`} • Film et séances • CinésBW</title
+		{movie.releaseDate && `(${dayjs(movie.releaseDate).tz().year()})`} • Film et séances • CinésBW</title
 	>
 </svelte:head>
 
@@ -69,7 +69,7 @@
 	<div class="metadata">
 		{#if movie.releaseDate}
 			<p>
-				Sortie le <strong>{dayjs.tz(movie.releaseDate).format('D MMMM YYYY')}</strong>
+				Sortie le <strong>{dayjs(movie.releaseDate).tz().format('D MMMM YYYY')}</strong>
 			</p>
 		{/if}
 		{#if movie.originalLanguage}

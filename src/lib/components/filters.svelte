@@ -11,7 +11,7 @@
 	import type { ShowCinemas } from '$lib/utils/types';
 	import SlidersHorizontal from '@lucide/svelte/icons/sliders-horizontal';
 	import X from '@lucide/svelte/icons/x';
-	import dayjs from 'dayjs';
+	import dayjs from '$lib/dayjs';
 
 	interface Props {
 		showsFilters: {
@@ -55,7 +55,7 @@
 	>
 	<div class="dates">
 		{#each (await getShowsDates()).filter((date) => !datesToShow || datesToShow.includes(date)) as dateStr}
-			{@const date = dayjs.tz(dateStr)}
+			{@const date = dayjs(dateStr).tz()}
 
 			<label>
 				<input

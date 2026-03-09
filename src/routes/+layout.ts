@@ -1,5 +1,5 @@
 import type { ShowCinemas } from '$lib/utils/types';
-import dayjs from 'dayjs';
+import dayjs from '$lib/dayjs';
 
 export const load = ({ url }) => {
 	const searchParams = url.searchParams;
@@ -10,7 +10,7 @@ export const load = ({ url }) => {
 
 	return {
 		showsFilters: {
-			date: date ? dayjs.tz(date) : dayjs.tz().startOf('date'),
+			date: date ? dayjs(date).tz() : dayjs.tz().startOf('date'),
 			cinemas: cinemas ? (cinemas.split(',').map(Number) as ShowCinemas[]) : [],
 			versions: versions ? versions.split(',') : [],
 			genres: genres ? genres.split(',').map(Number) : []

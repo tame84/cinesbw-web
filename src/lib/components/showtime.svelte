@@ -1,5 +1,5 @@
 <script lang="ts">
-	import dayjs from 'dayjs';
+	import dayjs from '$lib/dayjs';
 
 	interface Props {
 		datetime: string;
@@ -15,7 +15,7 @@
 
 <li>
 	<a href={cinema.website} target="_blank">
-		<strong>{dayjs.tz(datetime).format('HH:mm')}<span>{version}</span></strong>
+		<strong>{dayjs(datetime).tz().format('HH:mm')}<span>{version}</span></strong>
 
 		<p>{cinema.name}</p></a
 	>

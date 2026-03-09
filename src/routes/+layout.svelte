@@ -3,19 +3,20 @@
 	import '$lib/styles/app.scss';
 	import { getLastScrapeDate } from '$lib/remotes/update.remote';
 	import X from '@lucide/svelte/icons/x';
-	import dayjs from 'dayjs';
+	import dayjs from '$lib/dayjs';
 	import 'dayjs/locale/fr';
 	import utc from 'dayjs/plugin/utc';
 	import timezone from 'dayjs/plugin/timezone';
 
 	dayjs.extend(utc);
 	dayjs.extend(timezone);
+
 	dayjs.locale('fr');
 	dayjs.tz.setDefault('Europe/Brussels');
 
 	let { children } = $props();
 
-	let lastScrapeDate = $derived(dayjs.tz(await getLastScrapeDate()));
+	let lastScrapeDate = $derived(dayjs(await getLastScrapeDate()).tz());
 </script>
 
 <svelte:head>

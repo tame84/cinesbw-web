@@ -1,7 +1,7 @@
 import { query } from '$app/server';
 import { db } from '$lib/server/database';
 import { cinemasTable, genresTable, showsTable, showtimesTable } from '$lib/server/database/schema';
-import dayjs from 'dayjs';
+import dayjs from '$lib/dayjs';
 import { eq, gte } from 'drizzle-orm';
 
 export const getShowsDates = query(async () => {
