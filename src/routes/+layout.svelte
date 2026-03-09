@@ -4,8 +4,6 @@
 	import { getLastScrapeDate } from '$lib/remotes/update.remote';
 	import X from '@lucide/svelte/icons/x';
 	import dayjs from 'dayjs';
-	import locale from 'dayjs/locale/fr';
-	import { onMount } from 'svelte';
 
 	let { children } = $props();
 

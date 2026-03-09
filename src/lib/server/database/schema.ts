@@ -1,14 +1,4 @@
-import {
-	date,
-	integer,
-	jsonb,
-	pgTable,
-	serial,
-	text,
-	timestamp,
-	unique,
-	uuid
-} from 'drizzle-orm/pg-core';
+import { integer, jsonb, pgTable, serial, text, unique, uuid } from 'drizzle-orm/pg-core';
 
 export interface Poster {
 	small: string;
