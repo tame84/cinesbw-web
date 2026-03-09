@@ -3,10 +3,14 @@
 	import '$lib/styles/app.scss';
 	import { getLastScrapeDate } from '$lib/remotes/update.remote';
 	import X from '@lucide/svelte/icons/x';
+	import dayjs from 'dayjs';
+	import locale from 'dayjs/locale/fr';
+	import { onMount } from 'svelte';
 
 	let { children } = $props();
 
-	let lastScrapeDate = $derived(await getLastScrapeDate());
+	dayjs.locale('fr');
+	let lastScrapeDate = $derived(dayjs(await getLastScrapeDate()));
 </script>
 
 <svelte:head>
@@ -16,11 +20,7 @@
 <dialog id="last-update-dialog" open>
 	<div class="last-update">
 		<p>
-			Dernière mise à jour le {lastScrapeDate.toLocaleDateString('fr-BE', {
-				day: '2-digit',
-				month: 'long',
-				year: 'numeric'
-			})}.
+			Dernière mise à jour le {lastScrapeDate.format('D MMMM YYYY')}.
 		</p>
 		<button command="close" commandfor="last-update-dialog"><X /></button>
 	</div>

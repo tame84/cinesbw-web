@@ -1,17 +1,18 @@
 import { query } from '$app/server';
 import { db } from '$lib/server/database';
 import { cinemasTable, genresTable, showsTable, showtimesTable } from '$lib/server/database/schema';
+import dayjs from 'dayjs';
 import { eq, gte } from 'drizzle-orm';
 
 export const getShowsDates = query(async () => {
 	const rawShowsDates = await db
 		.selectDistinct({ date: showsTable.date })
 		.from(showsTable)
-		.where(gte(showsTable.date, new Date()))
+		.where(gte(showsTable.date, dayjs().startOf('date').format()))
 		.orderBy(showsTable.date);
-	const showsDate = rawShowsDates.map(({ date }) => date);
+	const showsDates = rawShowsDates.map(({ date }) => date);
 
-	return showsDate;
+	return showsDates;
 });
 
 export const getShowsCinemas = query(async () => {

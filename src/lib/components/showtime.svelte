@@ -1,17 +1,23 @@
 <script lang="ts">
-	let { dateTime, version, cinemaName, cinemaWebsite } = $props();
+	import dayjs from 'dayjs';
+
+	interface Props {
+		datetime: string;
+		version: string;
+		cinema: {
+			name: string;
+			website: string;
+		};
+	}
+
+	let { datetime, version, cinema }: Props = $props();
 </script>
 
 <li>
-	<a href={cinemaWebsite} target="_blank">
-		<strong
-			>{new Date(dateTime).toLocaleTimeString('fr-BE', {
-				hour: '2-digit',
-				minute: '2-digit'
-			})}<span>{version}</span></strong
-		>
+	<a href={cinema.website} target="_blank">
+		<strong>{dayjs(datetime).format('HH:mm')}<span>{version}</span></strong>
 
-		<p>{cinemaName}</p></a
+		<p>{cinema.name}</p></a
 	>
 </li>
 

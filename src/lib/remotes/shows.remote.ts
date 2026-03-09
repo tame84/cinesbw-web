@@ -11,6 +11,7 @@ import {
 } from '$lib/server/database/schema';
 import { getExistingGenres, getExistingVersions } from '$lib/utils/movie';
 import { ShowCinemas } from '$lib/utils/types';
+import dayjs from 'dayjs';
 import { and, eq, exists, inArray, like, or } from 'drizzle-orm';
 import * as v from 'valibot';
 
@@ -23,7 +24,7 @@ interface Show {
 		poster: Poster | null;
 	};
 	showtimes: {
-		dateTime: Date;
+		datetime: string;
 		version: string;
 		cinema: {
 			name: string;
@@ -34,7 +35,11 @@ interface Show {
 
 export const getShows = query(
 	v.object({
-		date: v.pipe(v.date(), v.toMinValue(new Date())),
+		date: v.pipe(
+			v.date(),
+			v.toMinValue(dayjs().startOf('date').toDate()),
+			v.transform((date) => dayjs(date))
+		),
 		cinemas: v.array(v.enum(ShowCinemas)),
 		versions: v.array(v.string()),
 		genres: v.array(v.number())
@@ -83,7 +88,7 @@ export const getShows = query(
 					name: genresTable.name
 				},
 				showtime: {
-					dateTime: showtimesTable.dateTime,
+					datetime: showtimesTable.datetime,
 					version: showtimesTable.version
 				},
 				cinema: {
@@ -92,7 +97,7 @@ export const getShows = query(
 				}
 			})
 			.from(showsTable)
-			.where(and(eq(showsTable.date, date), ...moviesGenresFilters))
+			.where(and(eq(showsTable.date, date.format()), ...moviesGenresFilters))
 			.innerJoin(moviesTable, eq(moviesTable.uuid, showsTable.movieUuid))
 			.innerJoin(moviesGenresTable, eq(moviesGenresTable.movieUuid, moviesTable.uuid))
 			.innerJoin(genresTable, eq(genresTable.id, moviesGenresTable.genreId))
@@ -101,7 +106,7 @@ export const getShows = query(
 				and(eq(showtimesTable.showUuid, showsTable.uuid), ...showtimesFilters)
 			)
 			.innerJoin(cinemasTable, eq(cinemasTable.id, showtimesTable.cinemaId))
-			.orderBy(moviesTable.slug, showtimesTable.dateTime, genresTable.name);
+			.orderBy(moviesTable.slug, showtimesTable.datetime, genresTable.name);
 
 		const showsMap = new Map<string, Show>();
 		const showtimesSet = new Set<string>();
@@ -118,12 +123,12 @@ export const getShows = query(
 			if (showData) {
 				showData.movie.genres.includes(genre.name) || showData.movie.genres.push(genre.name);
 
-				const showtimeKey = `${show.uuid}-${showtime.dateTime.toString()}-${showtime.version}-${cinema.name}`;
+				const showtimeKey = `${show.uuid}-${showtime.datetime}-${showtime.version}-${cinema.name}`;
 				if (showtimesSet.has(showtimeKey)) {
 					return;
 				}
 				showData.showtimes.push({
-					dateTime: showtime.dateTime,
+					datetime: showtime.datetime,
 					version: showtime.version,
 					cinema: { ...cinema }
 				});

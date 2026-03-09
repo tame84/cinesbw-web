@@ -1,4 +1,4 @@
-import { getRequestEvent, query } from '$app/server';
+import { query } from '$app/server';
 import { OMDB_API_KEY } from '$env/static/private';
 import { db } from '$lib/server/database';
 import {
@@ -12,11 +12,11 @@ import {
 import { getExistingVersions } from '$lib/utils/movie';
 import { ShowCinemas } from '$lib/utils/types';
 import { error } from '@sveltejs/kit';
+import dayjs from 'dayjs';
 import { and, eq, inArray, like, or } from 'drizzle-orm';
 import * as v from 'valibot';
 
 export const getMovie = query(v.string(), async (slug) => {
-	const { fetch } = getRequestEvent();
 	const [movie] = await db
 		.select({
 			uuid: moviesTable.uuid,
@@ -65,7 +65,11 @@ export const getMovieImdbRating = query(v.string(), async (imdbId) => {
 export const getMovieShowtimes = query(
 	v.object({
 		uuid: v.string(),
-		date: v.pipe(v.date(), v.toMinValue(new Date())),
+		date: v.pipe(
+			v.date(),
+			v.toMinValue(dayjs().startOf('date').toDate()),
+			v.transform((date) => dayjs(date))
+		),
 		cinemas: v.array(v.enum(ShowCinemas)),
 		versions: v.array(v.string())
 	}),
@@ -81,7 +85,7 @@ export const getMovieShowtimes = query(
 
 		const showtimes = await db
 			.select({
-				dateTime: showtimesTable.dateTime,
+				datetime: showtimesTable.datetime,
 				version: showtimesTable.version,
 				cinema: {
 					name: cinemasTable.name,
@@ -89,13 +93,13 @@ export const getMovieShowtimes = query(
 				}
 			})
 			.from(showsTable)
-			.where(and(eq(showsTable.movieUuid, uuid), eq(showsTable.date, date)))
+			.where(and(eq(showsTable.movieUuid, uuid), eq(showsTable.date, date.format())))
 			.innerJoin(
 				showtimesTable,
 				and(eq(showtimesTable.showUuid, showsTable.uuid), ...showtimesFilters)
 			)
 			.innerJoin(cinemasTable, eq(cinemasTable.id, showtimesTable.cinemaId))
-			.orderBy(showtimesTable.dateTime);
+			.orderBy(showtimesTable.datetime);
 
 		return showtimes;
 	}
@@ -106,7 +110,7 @@ export const getMovieAllShowsDates = query(v.string(), async (uuid) => {
 		.select({ date: showsTable.date })
 		.from(showsTable)
 		.where(eq(showsTable.movieUuid, uuid));
-	const showsDates = rawShowsDates.map((show) => show.date.toISOString().split('T')[0]);
+	const showsDates = rawShowsDates.map((show) => show.date);
 
 	return showsDates;
 });

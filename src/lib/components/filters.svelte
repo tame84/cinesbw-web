@@ -11,6 +11,7 @@
 	import type { ShowCinemas } from '$lib/utils/types';
 	import SlidersHorizontal from '@lucide/svelte/icons/sliders-horizontal';
 	import X from '@lucide/svelte/icons/x';
+	import dayjs from 'dayjs';
 
 	interface Props {
 		showGenres: boolean;
@@ -28,7 +29,7 @@
 		const genres = searchParams.get('genres');
 
 		return {
-			date: date ? new Date(date) : new Date(),
+			date: date ? dayjs(date) : dayjs().startOf('date'),
 			cinemas: cinemas ? (cinemas.split(',').map(Number) as ShowCinemas[]) : [],
 			versions: versions ? versions.split(',') : [],
 			genres: genres ? genres.split(',').map(Number) : []
@@ -62,33 +63,27 @@
 		><SlidersHorizontal size={16} strokeWidth={2.5} /></button
 	>
 	<div class="dates">
-		{#each (await getShowsDates()).filter((date) => !datesToShow || datesToShow.includes(date
-						.toISOString()
-						.split('T')[0])) as date, i}
-			{@const isToday = date.toISOString().split('T')[0] === new Date().toISOString().split('T')[0]}
-			{@const isTomorrow =
-				date.toISOString().split('T')[0] ===
-				new Date(Date.now() + 86400000).toISOString().split('T')[0]}
+		{#each (await getShowsDates()).filter((date) => !datesToShow || datesToShow.includes(date)) as dateStr}
+			{@const date = dayjs(dateStr)}
 
 			<label>
 				<input
 					type="radio"
 					name="date"
-					checked={date.toISOString().split('T')[0] ===
-						showsFilters.date.toISOString().split('T')[0]}
+					checked={date === showsFilters.date}
 					onclick={() => {
 						const params = new URLSearchParams(page.url.searchParams);
-						params.set('date', date.toISOString().split('T')[0]);
+						params.set('date', date.format('YYYY-MM-DD'));
 						goto(`?${params.toString()}`, { noScroll: true });
 					}}
 				/>
-				{#if isToday}
+				{#if date.isSame(dayjs().startOf('date'))}
 					<span>Aujourd'hui</span>
-				{:else if isTomorrow}
+				{:else if date.isSame(dayjs().startOf('date').add(1, 'day'))}
 					<span>Demain</span>
 				{:else}
 					<p>
-						{date.toLocaleDateString('fr-BE', { weekday: 'long', day: 'numeric', month: 'long' })}
+						{date.format('ddd D MMM')}
 					</p>
 				{/if}
 			</label>

@@ -30,6 +30,7 @@
     "dependencies": {
         "@lucide/svelte": "^0.574.0",
         "@neondatabase/serverless": "^1.0.2",
+        "dayjs": "^1.11.19",
         "drizzle-orm": "^0.45.1",
         "valibot": "^1.2.0"
     }

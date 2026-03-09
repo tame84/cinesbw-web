@@ -5,6 +5,7 @@
 	import { getShows } from '$lib/remotes/shows.remote';
 	import { runtimeMinuteToHours } from '$lib/utils/movie';
 	import type { ShowCinemas } from '$lib/utils/types';
+	import dayjs from 'dayjs';
 
 	let showsFilters = $derived.by(() => {
 		const searchParams = page.url.searchParams;
@@ -14,7 +15,7 @@
 		const genres = searchParams.get('genres');
 
 		return {
-			date: date ? new Date(date) : new Date(),
+			date: date ? dayjs(date) : dayjs().startOf('date'),
 			cinemas: cinemas ? (cinemas.split(',').map(Number) as ShowCinemas[]) : [],
 			versions: versions ? versions.split(',') : [],
 			genres: genres ? genres.split(',').map(Number) : []
@@ -23,7 +24,7 @@
 
 	let shows = $derived(
 		await getShows({
-			date: showsFilters.date,
+			date: showsFilters.date.toDate(),
 			cinemas: showsFilters.cinemas,
 			versions: showsFilters.versions,
 			genres: showsFilters.genres
@@ -68,13 +69,8 @@
 								</header>
 							</a>
 							<ul class="showtimes">
-								{#each showtimes as { dateTime, version, cinema }}
-									<Showtime
-										{dateTime}
-										{version}
-										cinemaName={cinema.name}
-										cinemaWebsite={cinema.website}
-									/>
+								{#each showtimes as { datetime, version, cinema }}
+									<Showtime {datetime} {version} {cinema} />
 								{/each}
 							</ul>
 						</div>

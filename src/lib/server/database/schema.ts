@@ -17,7 +17,6 @@ export interface Poster {
 }
 
 export interface Backdrop {
-	small: string;
 	medium: string;
 	large: string;
 }
@@ -46,15 +45,15 @@ export const moviesTable = pgTable('movies', {
 	imdbId: text('imdb_id').unique(),
 	slug: text('slug').notNull().unique(),
 	title: text('title').notNull(),
-	releaseDate: date('release_date', { mode: 'date' }),
+	releaseDate: text('release_date'),
 	runtime: integer('runtime').notNull().default(0),
 	originalLanguage: text('original_language'),
 	directors: text('directors').array(),
 	actors: text('actors').array(),
 	overview: text('overview'),
-	backdrop: jsonb('backdrop').$type<{ medium: string; large: string }>(),
-	poster: jsonb('poster').$type<{ small: string; medium: string; large: string }>(),
-	videos: jsonb('videos').array().$type<{ name: string; key: string }[]>()
+	backdrop: jsonb('backdrop').$type<Backdrop>(),
+	poster: jsonb('poster').$type<Poster>(),
+	videos: jsonb('videos').array().$type<Video[]>()
 });
 
 export const moviesGenresTable = pgTable(
@@ -76,7 +75,7 @@ export const showsTable = pgTable(
 	'shows',
 	{
 		uuid: uuid('uuid').primaryKey().defaultRandom(),
-		date: date('date', { mode: 'date' }).notNull(),
+		date: text('date').notNull(),
 		movieUuid: uuid('movie_uuid')
 			.notNull()
 			.references(() => moviesTable.uuid, { onDelete: 'cascade', onUpdate: 'cascade' })
@@ -87,7 +86,7 @@ export const showsTable = pgTable(
 export const showtimesTable = pgTable(
 	'showtimes',
 	{
-		dateTime: timestamp('date_time', { mode: 'date', withTimezone: true }).notNull(),
+		datetime: text('datetime').notNull(),
 		version: text('version').notNull(),
 		versionLong: text('version_long').notNull(),
 		showUuid: uuid('show_uuid')
@@ -97,5 +96,5 @@ export const showtimesTable = pgTable(
 			.notNull()
 			.references(() => cinemasTable.id, { onDelete: 'cascade', onUpdate: 'cascade' })
 	},
-	(t) => [unique().on(t.cinemaId, t.showUuid, t.version, t.dateTime)]
+	(t) => [unique().on(t.cinemaId, t.showUuid, t.version, t.datetime)]
 );

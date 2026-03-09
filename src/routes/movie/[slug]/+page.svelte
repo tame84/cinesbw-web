@@ -14,6 +14,7 @@
 	import ChevronRight from '@lucide/svelte/icons/chevron-right';
 	import Play from '@lucide/svelte/icons/play';
 	import X from '@lucide/svelte/icons/x';
+	import dayjs from 'dayjs';
 
 	let { params } = $props();
 
@@ -24,7 +25,7 @@
 		const versions = searchParams.get('versions');
 
 		return {
-			date: date ? new Date(date) : new Date(),
+			date: date ? dayjs(date) : dayjs().startOf('date'),
 			cinemas: cinemas ? (cinemas.split(',').map(Number) as ShowCinemas[]) : [],
 			versions: versions ? versions.split(',') : []
 		};
@@ -34,7 +35,7 @@
 	let showtimes = $derived(
 		await getMovieShowtimes({
 			uuid: movie.uuid,
-			date: showsFilters.date,
+			date: showsFilters.date.toDate(),
 			cinemas: showsFilters.cinemas,
 			versions: showsFilters.versions
 		})
@@ -51,7 +52,7 @@
 <svelte:head>
 	<title
 		>{movie.title}
-		{movie.releaseDate && `(${movie.releaseDate.getFullYear()})`} • Film et séances • CinésBW</title
+		{movie.releaseDate && `(${dayjs(movie.releaseDate).year()})`} • Film et séances • CinésBW</title
 	>
 </svelte:head>
 
@@ -96,13 +97,7 @@
 	<div class="metadata">
 		{#if movie.releaseDate}
 			<p>
-				Sortie le <strong
-					>{movie.releaseDate.toLocaleDateString('fr-BE', {
-						day: '2-digit',
-						month: 'long',
-						year: 'numeric'
-					})}</strong
-				>
+				Sortie le <strong>{dayjs(movie.releaseDate).format('D MMMM YYYY')}</strong>
 			</p>
 		{/if}
 		{#if movie.originalLanguage}
@@ -160,8 +155,8 @@
 <div class="showtimes">
 	{#if showtimes.length > 0}
 		<ul>
-			{#each showtimes as { dateTime, version, cinema }}
-				<Showtime {dateTime} {version} cinemaName={cinema.name} cinemaWebsite={cinema.website} />
+			{#each showtimes as { datetime, version, cinema }}
+				<Showtime {datetime} {version} {cinema} />
 			{/each}
 		</ul>
 	{:else}

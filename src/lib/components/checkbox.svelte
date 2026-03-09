@@ -6,7 +6,7 @@
 		onclick: () => void;
 	}
 
-	let { text, name, checked, onclick } = $props();
+	let { text, name, checked, onclick }: Props = $props();
 </script>
 
 <label>
