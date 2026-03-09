@@ -2,33 +2,18 @@
 	import { page } from '$app/state';
 	import Filters from '$lib/components/filters.svelte';
 	import Showtime from '$lib/components/showtime.svelte';
-	import {
-		getMovie,
-		getMovieAllShowsDates,
-		getMovieImdbRating,
-		getMovieShowtimes
-	} from '$lib/remotes/movie.remote';
+	import { getMovieAllShowsDates, getMovieImdbRating } from '$lib/remotes/movie.remote';
 	import { runtimeMinuteToHours } from '$lib/utils/movie';
-	import type { ShowCinemas } from '$lib/utils/types';
 	import ChevronLeft from '@lucide/svelte/icons/chevron-left';
 	import ChevronRight from '@lucide/svelte/icons/chevron-right';
 	import Play from '@lucide/svelte/icons/play';
 	import X from '@lucide/svelte/icons/x';
 	import dayjs from 'dayjs';
 
-	let { data, params } = $props();
+	let { data } = $props();
 
-	let showsFilters = $derived(data.showsFilters);
-
-	let movie = $derived(await getMovie(params.slug));
-	let showtimes = $derived(
-		await getMovieShowtimes({
-			uuid: movie.uuid,
-			date: showsFilters.date.toDate(),
-			cinemas: showsFilters.cinemas,
-			versions: showsFilters.versions
-		})
-	);
+	let movie = $derived(data.movie);
+	let showtimes = $derived(data.showtimes);
 
 	const stopTrailerOnClose = () => {
 		const trailerIFrame: HTMLIFrameElement | null = document.querySelector('#trailer-modal iframe');
@@ -134,7 +119,7 @@
 </main>
 
 <Filters
-{showsFilters}
+	showsFilters={data.showsFilters}
 	showGenres={false}
 	datesToShow={await getMovieAllShowsDates(movie.uuid)}
 	resultCount={showtimes.length}

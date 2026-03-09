@@ -2,23 +2,11 @@
 	import { page } from '$app/state';
 	import Filters from '$lib/components/filters.svelte';
 	import Showtime from '$lib/components/showtime.svelte';
-	import { getShows } from '$lib/remotes/shows.remote';
 	import { runtimeMinuteToHours } from '$lib/utils/movie';
-	import type { ShowCinemas } from '$lib/utils/types';
-	import dayjs from 'dayjs';
 
-    const {data} = $props()
+	const { data } = $props();
 
-	let showsFilters = $derived(data.showsFilters);
-
-	let shows = $derived(
-		await getShows({
-			date: showsFilters.date.toDate(),
-			cinemas: showsFilters.cinemas,
-			versions: showsFilters.versions,
-			genres: showsFilters.genres
-		})
-	);
+	let shows = $derived(data.shows);
 </script>
 
 <svelte:head>
@@ -29,7 +17,7 @@
 	<h1 class="logo">CinésBW</h1>
 </header>
 
-<Filters {showsFilters} showGenres={true} resultCount={shows.length} />
+<Filters showsFilters={data.showsFilters} showGenres={true} resultCount={shows.length} />
 
 <main>
 	<svelte:boundary>

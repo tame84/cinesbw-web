@@ -1,4 +1,4 @@
-import { query } from '$app/server';
+import { getRequestEvent, query } from '$app/server';
 import { OMDB_API_KEY } from '$env/static/private';
 import { db } from '$lib/server/database';
 import {
@@ -51,6 +51,7 @@ export const getMovie = query(v.string(), async (slug) => {
 });
 
 export const getMovieImdbRating = query(v.string(), async (imdbId) => {
+	const { fetch } = getRequestEvent();
 	const response = await fetch(`https://www.omdbapi.com/?apikey=${OMDB_API_KEY}&i=${imdbId}`);
 	if (response.status === 200) {
 		const data: { imdbRating: string; imdbVotes: string } = await response.json();
