@@ -10,8 +10,8 @@
 
 	dayjs.extend(utc);
 	dayjs.extend(timezone);
-	dayjs.tz.setDefault('Europe/Brussels');
 	dayjs.locale('fr');
+	dayjs.tz.setDefault('Europe/Brussels');
 
 	let { children } = $props();
 

@@ -14,12 +14,12 @@
 	import dayjs from 'dayjs';
 
 	interface Props {
-        showsFilters: {
-            date: dayjs.Dayjs
-            cinemas: ShowCinemas[]
-            versions: string[]
-            genres: number[]
-        }
+		showsFilters: {
+			date: dayjs.Dayjs;
+			cinemas: ShowCinemas[];
+			versions: string[];
+			genres: number[];
+		};
 		showGenres: boolean;
 		datesToShow?: string[];
 		resultCount?: number;
@@ -141,7 +141,7 @@
 				class="btn btn--secondary"
 				type="button"
 				onclick={() => {
-					const currentDate = showsFilters.date.format("YYYY-MM-DD");
+					const currentDate = showsFilters.date.format('YYYY-MM-DD');
 					goto(`?date=${currentDate}`, { noScroll: true });
 				}}>Effacer les filtres</button
 			>

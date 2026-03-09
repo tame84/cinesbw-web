@@ -48,6 +48,8 @@ export const getShows = query(
 		const existingVersions = await getExistingVersions(versions);
 		const existingGenres = await getExistingGenres(genres);
 
+		console.log(dayjs.tz('2026-09-03').format(), dayjs('2026-09-03').format());
+
 		const moviesGenresFilters = [
 			existingGenres.length > 0
 				? exists(
