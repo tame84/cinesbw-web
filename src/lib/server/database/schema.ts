@@ -13,8 +13,6 @@ export interface Backdrop {
 
 export interface Video {
 	key: string;
-	site: string;
-	type: string;
 	name: string;
 }
 
@@ -31,8 +29,8 @@ export const genresTable = pgTable('genres', {
 
 export const moviesTable = pgTable('movies', {
 	uuid: uuid('uuid').primaryKey().defaultRandom(),
-	tmdbId: integer('tmdb_id').unique(),
-	imdbId: text('imdb_id').unique(),
+	tmdbId: integer('tmdb_id'),
+	imdbId: text('imdb_id'),
 	slug: text('slug').notNull().unique(),
 	title: text('title').notNull(),
 	releaseDate: text('release_date'),
